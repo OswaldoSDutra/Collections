@@ -4,10 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BinaryTreeTest {
 
@@ -41,6 +39,16 @@ public class BinaryTreeTest {
     @Test
     public void contains_should_be_false(){
         assertFalse(myBST.contains(17));
+    }
+
+    @Test
+    public void contains_recursive_should_be_true(){
+        assertTrue(myBST.containsRecursive(27));
+    }
+
+    @Test
+    public void contains_recursive_should_be_false(){
+        assertFalse(myBST.containsRecursive(17));
     }
 
 }

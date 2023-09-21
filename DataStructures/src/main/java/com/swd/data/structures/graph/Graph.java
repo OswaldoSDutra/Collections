@@ -1,86 +1,115 @@
 package com.swd.data.structures.graph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Graph {
 
-    private HashMap<String, ArrayList<String>> adjList = new HashMap<>();
+    private class GraphVertex{
+        public String value;
+        public ArrayList<GraphEdge> edges;
 
-    public HashMap<String, ArrayList<String>> getAdjList() {
-        return adjList;
-    }
-
-    public void printAdjacencyList() {
-        System.out.println(adjList);
-    }
-
-    public void printAdjacencyMatrix() {
-        int size = adjList.entrySet().size();
-        String[][] matrix = new String[size][size];
-        String[] vertices = new String[size];
-
-        int outerIndex = 0;
-
-        System.out.print(" ");
-        for(String vertex : adjList.keySet()) {
-            System.out.print(" " + vertex);
-            vertices[outerIndex] = vertex;
-            outerIndex++;
+        public GraphVertex(String value){
+            this.value = value;
+            this.edges = new ArrayList<>();
         }
+    }
 
-        System.out.println();
+    private class GraphEdge{
+        public String value;
+        public GraphVertex nodeTo;
 
-        outerIndex = 0;
-        for(Map.Entry<String, ArrayList<String>> vertex : adjList.entrySet()) {
+        public GraphEdge(String value, GraphVertex to){
+            this.value = value;
+            this.nodeTo = to;
+        }
+    }
 
-            System.out.print(vertex.getKey() + " ");
+    private final Map<String, GraphVertex> vertices;
+    private final List<String> visited;
 
-            for (int i = 0; i < vertices.length; i++) {
-                matrix[outerIndex][i] = vertex.getValue().contains(vertices[i]) ? "1" : "0";
-                System.out.print(matrix[outerIndex][i] + " ");
+    public Graph(){
+        this.vertices =  new HashMap<>();
+        this.visited = new ArrayList<>();
+    }
+
+    public void addVertex(String vertex){
+        GraphVertex graphVertex = new GraphVertex(vertex);
+        addVertex(graphVertex);
+    }
+
+    private void addVertex(GraphVertex vertex){
+
+        if(!vertices.containsKey(vertex.value))
+            vertices.put(vertex.value,vertex);
+    }
+
+    public void addEdge(String value, String from, String to){
+
+        if(! vertices.containsKey(from))
+            addVertex(from);
+
+        if(! vertices.containsKey(to))
+            addVertex(to);
+
+        GraphVertex f =  vertices.get(from);
+        GraphVertex t =  vertices.get(to);
+
+        f.edges.add(new GraphEdge(value, t));
+        //t.edges.add(new GraphEdge(value, f));
+    }
+
+    public void printVertices(){
+        for (String v : vertices.keySet()) {
+            System.out.println(v);
+        }
+    }
+
+    public void printEdges(){
+        for (Map.Entry<String, GraphVertex> v : vertices.entrySet()) {
+            for(GraphEdge e : v.getValue().edges) {
+                System.out.printf("\nFrom: %s, To: %s, Distance: %s ", v.getValue().value, e.nodeTo.value, e.value);
             }
-
-            outerIndex++;
-            System.out.println();
         }
     }
 
-    public boolean addVertex(String vertex) {
-        if (adjList.get(vertex) == null) {
-            adjList.put(vertex, new ArrayList<String>());
-            return true;
+    private void printDFS(GraphVertex vertex){
+
+        if(visited.contains(vertex.value))
+            return;
+
+        visited.add(vertex.value);
+
+        for(GraphEdge e : vertex.edges) {
+            System.out.printf("\nVertex: %s, To: %s, Distance: %s ", vertex.value, e.nodeTo.value, e.value);
+            printDFS(e.nodeTo);
         }
-        return false;
     }
 
-    public boolean addEdge(String vertex1, String vertex2) {
-        if (adjList.get(vertex1) != null && adjList.get(vertex2) != null) {
-            adjList.get(vertex1).add(vertex2);
-            adjList.get(vertex2).add(vertex1);
-            return true;
-        }
-        return false;
+    public void printDFS(String vertex){
+        visited.clear();
+        printDFS(vertices.get(vertex));
     }
 
-    public boolean removeEdge(String vertex1, String vertex2) {
-        if (adjList.get(vertex1) != null && adjList.get(vertex2) != null) {
-            adjList.get(vertex1).remove(vertex2);
-            adjList.get(vertex2).remove(vertex1);
-            return true;
+    private void printBFS(GraphVertex vertex){
+
+        System.out.printf("\nVertex: %s", vertex.value);
+        visited.add(vertex.value);
+
+        Queue<GraphEdge> queue = new ArrayDeque<>(vertex.edges);
+        while (!queue.isEmpty()){
+            GraphEdge current = queue.poll();
+
+            if(!visited.contains(current.nodeTo.value)) {
+                System.out.printf("\nTo: %s, Distance: %s ", current.nodeTo.value, current.value);
+                visited.add(current.nodeTo.value);
+                queue.addAll(current.nodeTo.edges);
+            }
         }
-        return false;
     }
 
-    public boolean removeVertex(String vertex) {
-        if (adjList.get(vertex) == null) return false;
-        for (String otherVertex : adjList.get(vertex)) {
-            adjList.get(otherVertex).remove(vertex);
-        }
-        adjList.remove(vertex);
-        return true;
+    public void printBFS(String vertex){
+        visited.clear();
+        printBFS(vertices.get(vertex));
     }
 
 }
