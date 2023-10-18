@@ -3,6 +3,7 @@ package com.swd.data.structures.tree;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 public class BinarySearchTree {
 
@@ -182,6 +183,30 @@ public class BinarySearchTree {
 
         new Traverse(root);
         return results;
+    }
+
+    public Integer kthSmallest(Integer kth) {
+
+        Stack<Node> stack = new Stack<Node>();
+        Node current = root;
+
+        while (!stack.isEmpty() || current != null) {
+
+            while (current != null){
+                stack.push(current);
+                current = current.left;
+            }
+
+            current = stack.pop();
+            kth--;
+
+            if(kth == 0)
+                return current.value;
+
+            current = current.right;
+        }
+
+        return null;
     }
 
 }

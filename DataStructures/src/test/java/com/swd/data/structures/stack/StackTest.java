@@ -1,12 +1,9 @@
 package com.swd.data.structures.stack;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.swing.plaf.synth.SynthTextAreaUI;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -30,7 +27,7 @@ public class StackTest {
     @Test
     public void sould_print_all() {
 
-        Stack myStack = new Stack(4);
+        BasicStack myStack = new BasicStack(4);
 
         myStack.printAll();
 

@@ -1,6 +1,6 @@
 package com.swd.data.structures.stack;
 
-public class Stack {
+public class BasicStack {
 
     class Node{
         int value;
@@ -14,7 +14,7 @@ public class Stack {
     private int height;
     private Node top;
 
-    public Stack(int value){
+    public BasicStack(int value){
         Node newNode = new Node(value);
         this.top = newNode;
         height++;
